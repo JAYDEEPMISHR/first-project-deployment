@@ -45,8 +45,14 @@
 			<div id="top-header">
 				<div class="container">
 					<ul class="header-links pull-right">
-						<li><a href="{% url 'signup' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Sign Up</a></li>
-						<li><a href="#"><i style='font-size:15px' class='far'>&#xf2bd;</i> Login</a></li>
+						{% if request.session.email %}
+							<li><a href="#"><i style='font-size:15px' class='far'>&#xf2bd;</i> Change Password</a></li>
+							<li><a href="{% url 'logout' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Logout({{request.session.fname}})</a></li>
+						{% else %}
+							<li><a href="{% url 'signup' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Sign Up</a></li>
+							<li><a href="{% url 'login' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Login</a></li>
+						{% endif %}
+						
 					</ul>
 				</div>
 			</div>
@@ -61,7 +67,7 @@
 						<!-- LOGO -->
 						<div class="col-md-3">
 							<div class="header-logo">
-								<a href="#" class="logo">
+								<a href="/" class="logo">
 									<img src="{% static './img/logo.png' %}" alt="">
 								</a>
 							</div>
