@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import User
 # Create your views here.
 
@@ -53,3 +53,37 @@ def logout(request):
 		return render(request,'login.html')
 	except:
 		return render(request,'login.html')
+
+def change_password(request):
+	if request.method=="POST":
+		user=User.objects.get(email=request.session['email'])
+		if user.password==request.POST['old_password']:
+			if request.POST['new_password']==request.POST['cnew_password']:
+				user.password=request.POST['new_password']
+				user.save()
+				return redirect('logout')
+			else:
+				msg="New Password and Confirm New Password does not match"
+				return render(request,'change-password.html',{'msg':msg})
+		else:
+			msg="Old Password does not matched"
+			return render(request,'change-password.html',{'msg':msg})
+	else:
+		return render(request,'change-password.html')
+
+def profile(request):
+	user=User.objects.get(email=request.session['email'])
+	if request.method=="POST":
+		user.fname=request.POST['fname'],
+		user.lname=request.POST['lname'],
+		user.email=request.POST['email'],
+		user.address=request.POST['address'],
+		user.city=request.POST['city'],
+		user.zipcode=request.POST['zipcode'],
+		user.save()
+		msg="Profile Updated successfully"
+		return render(request,'profile.html',{'user':user,'msg':msg})
+	else:
+		return render(request,'profile.html',{'user':user})
+
+
