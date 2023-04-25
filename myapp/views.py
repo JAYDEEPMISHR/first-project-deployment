@@ -22,7 +22,8 @@ def signup(request):
 						address=request.POST['address'],
 						city=request.POST['city'],
 						zipcode=request.POST['zipcode'],
-						password=request.POST['password']
+						password=request.POST['password'],
+						profile_pic=request.FILE['profile_pic']
 					)
 				msg="User SignUP successfully"
 				return render(request,'login.html',{'msg':msg})
@@ -34,14 +35,18 @@ def signup(request):
 
 def login(request):
 	if request.method=="POST":
-		user=User.objects.get(email=request.POST['email'])
-		if user.password==request.POST['password']:
-			request.session['email']=user.email
-			request.session['fname']=user.fname
-			return render(request,'index.html')
-
-		else:
-			msg="Incorrect Password"
+		try:
+			user=User.objects.get(email=request.POST['email'])
+			if user.password==request.POST['password']:
+				request.session['email']=user.email
+				request.session['fname']=user.fname
+				request.session['profile_pic']=user.profile_pic.url
+				return render(request,'index.html')
+			else:
+				msg="Invalid password"
+				return render(request,'login.html',{'msg':msg})
+		except:
+			msg="Email Not registered"
 			return render(request,'login.html',{'msg':msg})
 	else:
 		return render(request,'login.html')
@@ -50,6 +55,7 @@ def logout(request):
 	try:
 		del request.session['email']
 		del request.session['fname']
+		del request.session['profile_pic']
 		return render(request,'login.html')
 	except:
 		return render(request,'login.html')
@@ -74,12 +80,11 @@ def change_password(request):
 def profile(request):
 	user=User.objects.get(email=request.session['email'])
 	if request.method=="POST":
-		user.fname=request.POST['fname'],
-		user.lname=request.POST['lname'],
-		user.email=request.POST['email'],
+		user.fname=request.POST['fname']
+		user.lname=request.POST['lname']
 		user.mobile=request.POST['mobile']
-		user.address=request.POST['address'],
-		user.city=request.POST['city'],
+		user.address=request.POST['address']
+		user.city=request.POST['city']
 		user.zipcode=request.POST['zipcode']
 		user.save()
 		msg="Profile Updated successfully"
