@@ -23,7 +23,7 @@ def signup(request):
 						city=request.POST['city'],
 						zipcode=request.POST['zipcode'],
 						password=request.POST['password'],
-						profile_pic=request.FILE['profile_pic']
+						profile_pic=request.FILES['profile_pic'],
 					)
 				msg="User SignUP successfully"
 				return render(request,'login.html',{'msg':msg})
