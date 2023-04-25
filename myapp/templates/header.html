@@ -48,7 +48,7 @@
 						{% if request.session.email %}
 							<li><a href="{% url 'profile' %}"><i style='font-size:15px, ' class='fas fa-edit'></i> Edit Profile</a></li>
 							<li><a href="{% url 'change-password' %}"><i style='font-size:15px, ' class='fa fa-key'></i> Change Password</a></li>
-							<li><a href="{% url 'logout' %}"><i style='font-size:15px' class='fa fa-sign-out'></i> Logout({{request.session.fname}})</a></li>
+							<li><a href="{% url 'logout' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Logout({{request.session.fname}})</a></li>
 						{% else %}
 							<li><a href="{% url 'signup' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Sign Up</a></li>
 							<li><a href="{% url 'login' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Login</a></li>
@@ -97,7 +97,7 @@
 								<!-- Wishlist -->
 								<div>
 									<a href="#">
-										<i class="fa fa-heart-o"></i>
+										<i class="fa fa-heart"></i>
 										<span>Your Wishlist</span>
 										<div class="qty">2</div>
 									</a>
@@ -297,6 +297,7 @@
 		<script src="{% static 'js/nouislider.min.js' %}"></script>
 		<script src="{% static 'js/jquery.zoom.min.js' %}"></script>
 		<script src="{% static 'js/main.js' %}"></script>
+		
 
 	</body>
 </html>

@@ -77,9 +77,10 @@ def profile(request):
 		user.fname=request.POST['fname'],
 		user.lname=request.POST['lname'],
 		user.email=request.POST['email'],
+		user.mobile=request.POST['mobile']
 		user.address=request.POST['address'],
 		user.city=request.POST['city'],
-		user.zipcode=request.POST['zipcode'],
+		user.zipcode=request.POST['zipcode']
 		user.save()
 		msg="Profile Updated successfully"
 		return render(request,'profile.html',{'user':user,'msg':msg})
