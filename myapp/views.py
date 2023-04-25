@@ -56,7 +56,7 @@ def logout(request):
 		del request.session['email']
 		del request.session['fname']
 		del request.session['profile_pic']
-		return render(request,'login.html')
+		return render(request,'index.html')
 	except:
 		return render(request,'login.html')
 
@@ -86,8 +86,13 @@ def profile(request):
 		user.address=request.POST['address']
 		user.city=request.POST['city']
 		user.zipcode=request.POST['zipcode']
+		try:
+			user.profile_pic=request.FILES['profile_pic']
+		except:
+			pass
 		user.save()
 		msg="Profile Updated successfully"
+		request.session['profile_pic']=user.profile_pic.url
 		return render(request,'profile.html',{'user':user,'msg':msg})
 	else:
 		return render(request,'profile.html',{'user':user})
