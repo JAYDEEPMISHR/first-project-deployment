@@ -1,5 +1,10 @@
 from django.shortcuts import render,redirect
 from .models import User
+from django.conf import settings
+from django.core.mail import send_mail
+import random
+
+
 # Create your views here.
 
 def index(request):
@@ -23,7 +28,7 @@ def signup(request):
 						city=request.POST['city'],
 						zipcode=request.POST['zipcode'],
 						password=request.POST['password'],
-						profile_pic=request.FILES['profile_pic'],
+						profile_pic=request.FILES['profile_pic']
 					)
 				msg="User SignUP successfully"
 				return render(request,'login.html',{'msg':msg})
@@ -98,3 +103,47 @@ def profile(request):
 		return render(request,'profile.html',{'user':user})
 
 
+def forgot_password(request):
+	if request.method=="POST":
+		try:
+			user=User.objects.get(email=request.POST['email'])
+			otp=random.randint(1000,9999)
+			subject = 'OTP for Forgot Password'
+			message = 'Hello ' + user.fname + ', Your OTP for forgot password is: '+str(otp)
+			email_from = settings.EMAIL_HOST_USER
+			recipient_list = [user.email,]
+			send_mail( subject, message, email_from, recipient_list)
+			return render(request,'otp.html',{'email':user.email,'otp':otp})
+
+		except:
+			msg="Email not registered"
+			return render(request,'forgot-password.html',{'msg':msg})
+
+	else:
+		return render(request,'forgot-password.html')
+
+def verify_otp(request):
+	email=request.POST['email']
+	otp=request.POST['otp']
+	uotp=request.POST['uotp']
+
+	if otp==uotp:
+		return render(request,'New-Password.html',{'email':email})
+	else:
+		msg="OTP is Invalid"
+		return render(request,'otp.html',{'email':email,'otp':otp,'msg':msg})
+
+def New_password(request):
+	email=request.POST['email']
+	np=request.POST['New-Password']
+	cnp=request.POST['cNew-Password']
+	if np==cnp:
+		user=User.objects.get(email=email)
+		user.password=np
+		user.save()
+		msg="Password Updated successfully"
+		return render(request,'login.html',{'msg':msg})
+
+	else:	
+		msg="New-Password and Confirm New-Password does not matched"
+		return render(request,'New-Password.html',{'msg':msg})
