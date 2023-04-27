@@ -46,10 +46,9 @@
 				<div class="container">
 					<ul class="header-links pull-right">
 						{% if request.session.email %}
-							
 							<li><a href="{% url 'change-password' %}"><i style='font-size:15px, ' class='fa fa-key'></i> Change Password</a></li>
 							<li><a href="{% url 'logout' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Logout({{request.session.fname}})</a></li>
-							<li> <a href="{% url 'profile' %}"><img src="request.session.profil_pic" width="30px" height="30px" style="border-radius: 50%;"> </a></li>
+							<li> <a href="{% url 'profile' %}"><img src="{{request.session.profile_pic}}" width="40px" height="40px" style="border-radius: 50%;"> </a></li>
 						{% else %}
 							<li><a href="{% url 'signup' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Sign Up</a></li>
 							<li><a href="{% url 'login' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Login</a></li>

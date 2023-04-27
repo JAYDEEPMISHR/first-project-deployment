@@ -28,7 +28,8 @@ def signup(request):
 						city=request.POST['city'],
 						zipcode=request.POST['zipcode'],
 						password=request.POST['password'],
-						profile_pic=request.FILES['profile_pic']
+						profile_pic=request.FILES['profile_pic'],
+						usertype=request.POST['usertype']
 					)
 				msg="User SignUP successfully"
 				return render(request,'login.html',{'msg':msg})
@@ -61,6 +62,7 @@ def logout(request):
 		del request.session['email']
 		del request.session['fname']
 		del request.session['profile_pic']
+		del request.session['mobile']
 		return render(request,'index.html')
 	except:
 		return render(request,'login.html')
@@ -147,3 +149,21 @@ def New_password(request):
 	else:	
 		msg="New-Password and Confirm New-Password does not matched"
 		return render(request,'New-Password.html',{'msg':msg})
+
+def mobile_login(request):
+	if request.method=="POST":
+		try:
+			user=User.objects.get(mobile=request.POST['mobile'])
+			if user.password==request.POST['password']:
+				request.session['mobile']=user.mobile
+				request.session['fname']=user.fname
+				request.session['profile_pic']=user.profile_pic.url
+				return render(request,'index.html')
+			else:
+				msg="Invalid password"
+				return render(request,'mobile-login.html',{'msg':msg})
+		except:
+			msg="Mobile Number is not registered"
+			return render(request,'mobile-login.html',{'msg':msg})
+	else:
+		return render(request,'mobile-login.html')
