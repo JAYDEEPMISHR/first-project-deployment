@@ -47,7 +47,7 @@
 					<ul class="header-links pull-right">
 						{% if request.session.email %}
 							<li><a href="#"><i style='font-size:15px, ' class='fa fa-pencil-square-o' aria-hidden="true"></i> Add-Product</a></li>
-							<li><a href="#"><i style='font-size:15px, ' class='fa fa-key'></i> View-product</a></li>
+							<li><a href="#"><i style='font-size:15px, ' class='fa fa-eye'></i> View-product</a></li>
 							<li><a href="{% url 'change-password' %}"><i style='font-size:15px, ' class='fa fa-key'></i> Change Password</a></li>
 							<li><a href="{% url 'logout' %}"><i style='font-size:15px' class='far'>&#xf2bd;</i> Logout({{request.session.fname}})</a></li>
 							<li> <a href="{% url 'profile' %}"><img src="{{request.session.profile_pic}}" width="40px" height="40px" style="border-radius: 50%;"> </a></li>
