@@ -44,10 +44,16 @@ def login(request):
 		try:
 			user=User.objects.get(email=request.POST['email'])
 			if user.password==request.POST['password']:
-				request.session['email']=user.email
-				request.session['fname']=user.fname
-				request.session['profile_pic']=user.profile_pic.url
-				return render(request,'index.html')
+				if user.usertype=="seller":
+					request.session['email']=user.email
+					request.session['fname']=user.fname
+					request.session['profile_pic']=user.profile_pic.url
+					return render(request,'seller-index.html')
+				else:
+					request.session['email']=user.email
+					request.session['fname']=user.fname
+					request.session['profile_pic']=user.profile_pic.url
+					return render(request,'index.html')
 			else:
 				msg="Invalid password"
 				return render(request,'login.html',{'msg':msg})
