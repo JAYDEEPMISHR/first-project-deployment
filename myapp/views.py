@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import User,Product,Category
+from .models import User,Product
 from django.conf import settings
 from django.core.mail import send_mail
 import random
@@ -8,7 +8,14 @@ import random
 # Create your views here.
 
 def index(request):
-	return render(request,'index.html')
+	try:
+		user=User.objects.get(email=request.session['email'])
+		if user.usertype=="buyer":
+			return render(request,'index.html')
+		else:
+			return render(request,'seller-index.html')
+	except:
+		return render(request,'index.html')
 
 def seller_index(request):
 	return render(request,'seller-index.html')

@@ -16,24 +16,20 @@ class User(models.Model):
 	def __str__(self):
 		return self.fname+' '+self.lname
 
-class Category(models.Model):
-	categories=(
+class Product(models.Model):
+	category=(
 			("Mobile","Mobile"),
 			("Camera","Camera"),
 			("Laptop","Laptop"),
 			("Head-phone","Head-phone")
 		)
-	product_categories=models.CharField(max_length=100,choices=categories)
-
-	def __str__(self):
-		return self.product_categories
-
-class Product(models.Model):
-	product_categories=models.ForeignKey(Category,on_delete=models.CASCADE)
+	seller=models.ForeignKey(User,on_delete=models.CASCADE,default="--------")
+	product_categories=models.CharField(max_length=100,choices=category)
 	product_name=models.CharField(max_length=100)
 	product_price=models.PositiveIntegerField()
 	product_desc=models.TextField()
-	product_pic=models.ImageField(upload_to="product_pic/",default="")
+	product_pic=models.ImageField(upload_to="product_pic/")
+	product_stock=models.PositiveIntegerField(default="0")
 
 	def __str__(self):
-		return self.product_name+'--'+self.product_categories
+		return self.seller.fname +'--'+self.product_name
