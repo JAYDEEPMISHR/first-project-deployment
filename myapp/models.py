@@ -16,7 +16,7 @@ class User(models.Model):
 	def __str__(self):
 		return self.fname+' '+self.lname
 
-class Product(models.Model):
+class Category(models.Model):
 	categories=(
 			("Mobile","Mobile"),
 			("Camera","Camera"),
@@ -24,6 +24,12 @@ class Product(models.Model):
 			("Head-phone","Head-phone")
 		)
 	product_categories=models.CharField(max_length=100,choices=categories)
+
+	def __str__(self):
+		return self.product_categories
+
+class Product(models.Model):
+	product_categories=models.ForeignKey(Category,on_delete=models.CASCADE)
 	product_name=models.CharField(max_length=100)
 	product_price=models.PositiveIntegerField()
 	product_desc=models.TextField()
