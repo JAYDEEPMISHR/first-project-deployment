@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import User
+from .models import User,Product
 from django.conf import settings
 from django.core.mail import send_mail
 import random
@@ -96,19 +96,22 @@ def change_password(request):
 def seller_change_password(request):
 	if request.method=="POST":
 		user=User.objects.get(email=request.session['email'])
-		if user.password==request.POST['old_password']:
-			if request.POST['new_password']==request.POST['cnew_password']:
-				user.password=request.POST['new_password']
-				user.save()
-				return redirect('logout')
+		if user.usertype=="seller":
+			if user.password==request.POST['old_password']:
+				if request.POST['new_password']==request.POST['cnew_password']:
+					user.password=request.POST['new_password']
+					user.save()
+					return redirect('logout')
+				else:
+					msg="New Password and Confirm New Password does not match"
+					return render(request,'seller-change-password.html',{'msg':msg})
 			else:
-				msg="New Password and Confirm New Password does not match"
+				msg="Old Password does not matched"
 				return render(request,'seller-change-password.html',{'msg':msg})
 		else:
-			msg="Old Password does not matched"
 			return render(request,'seller-change-password.html',{'msg':msg})
 	else:
-		return render(request,'change-password.html')
+		return render(request,'seller-change-password.html')
 
 def profile(request):
 	user=User.objects.get(email=request.session['email'])
@@ -129,6 +132,26 @@ def profile(request):
 		return render(request,'profile.html',{'user':user,'msg':msg})
 	else:
 		return render(request,'profile.html',{'user':user})
+
+def seller_profile(request):
+	user=User.objects.get(email=request.session['email'])
+	if request.method=="POST":
+		user.fname=request.POST['fname']
+		user.lname=request.POST['lname']
+		user.mobile=request.POST['mobile']
+		user.address=request.POST['address']
+		user.city=request.POST['city']
+		user.zipcode=request.POST['zipcode']
+		try:
+			user.profile_pic=request.FILES['profile_pic']
+		except:
+			pass
+		user.save()
+		msg="Profile Updated successfully"
+		request.session['profile_pic']=user.profile_pic.url
+		return render(request,'seller-profile.html',{'user':user,'msg':msg})
+	else:
+		return render(request,'seller-profile.html',{'user':user})
 
 
 def forgot_password(request):
