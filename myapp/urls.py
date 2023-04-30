@@ -14,4 +14,5 @@ urlpatterns = [
     path('New-password/',views.New_password,name='New-password'),
     path('seller-change-password/',views.seller_change_password,name='seller-change-password'),
     path('seller-profile/',views.seller_profile,name='seller-profile'),
+    path('seller-add-product/',views.seller_add_product,name='seller-add-product'),
 ]

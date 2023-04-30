@@ -23,7 +23,7 @@ def seller_index(request):
 def signup(request):
 	if request.method=="POST":
 		try:
-			User.objects.get(email=request.POST['email'])
+			user=User.objects.get(email=request.POST['email'])
 			msg="Email is already registered"
 			return render(request,'signup.html',{'msg':msg})
 		except:
@@ -78,7 +78,6 @@ def logout(request):
 		del request.session['email']
 		del request.session['fname']
 		del request.session['profile_pic']
-		del request.session['mobile']
 		return render(request,'index.html')
 	except:
 		return render(request,'login.html')
@@ -206,20 +205,19 @@ def New_password(request):
 		msg="New-Password and Confirm New-Password does not matched"
 		return render(request,'New-Password.html',{'msg':msg})
 
-def mobile_login(request):
+def seller_add_product(request):
+	seller=User.objects.get(email=request.session['email'])
 	if request.method=="POST":
-		try:
-			user=User.objects.get(mobile=request.POST['mobile'])
-			if user.password==request.POST['password']:
-				request.session['mobile']=user.mobile
-				request.session['fname']=user.fname
-				request.session['profile_pic']=user.profile_pic.url
-				return render(request,'index.html')
-			else:
-				msg="Invalid password"
-				return render(request,'mobile-login.html',{'msg':msg})
-		except:
-			msg="Mobile Number is not registered"
-			return render(request,'mobile-login.html',{'msg':msg})
+		Product.objects.create(
+					seller=seller,
+					product_category=request.POST['product_category'],
+					product_name=request.POST['product_name'],
+					product_price=request.POST['product_price'],
+					product_desc=request.POST['product_desc'],
+					product_image=request.FILES['product_image'],
+					product_stock=request.POST['product_stock'],
+			)
+		msg="Product added successfully"
+		return render(request,'seller-add-product.html',{'msg':msg})
 	else:
-		return render(request,'mobile-login.html')
+		return render(request,'seller-add-product.html')
