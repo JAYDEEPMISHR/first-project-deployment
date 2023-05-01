@@ -230,3 +230,20 @@ def seller_view_product(request):
 def seller_product_detail(request,pk):
 	product=Product.objects.get(pk=pk)
 	return render(request,'seller-product-detail.html',{'product':product})
+
+def seller_edit_product(request,pk):
+	product=Product.objects.get(pk=pk)
+	if request.method=="POST":
+		product.product_category=request.POST['product_category']
+		product.product_name=request.POST['product_name']
+		product.product_price=request.POST['product_price']
+		product.product_desc=request.POST['product_desc']
+		try:
+			product.product_image=request.POST['product_image']
+		except:
+			pass
+		product.product_stock=request.POST['product_stock']
+		product.save()
+		return redirect('seller-view-product')
+	else:
+		return render(request,'seller-edit-detail.html',{'product':product})

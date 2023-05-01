@@ -43,9 +43,8 @@
 												<h3 class="product-name"><a href="#">Name: {{product.product_name}}</a></h3>
 												<h4 class="product-price">Price: {{product.product_price}}</h4>
 												<h4 class="product-price">Discription: {{product.product_desc}}</h4>
-											</div>
-											<div class="add-to-cart">
-												<a href="{% url 'seller-product-detail' pk=product.pk %}"><button class="add-to-cart-btn">Details</button></a>
+												<a href="{% url 'seller-edit-product' pk=product.pk %}"><input type="button" value="EDIT" class="btn btn-primary"></a>
+												<a href=""><input type="button" value="DELETE" class="btn btn-danger"></a>
 											</div>
 										</div>
 										<!-- /product -->
