@@ -11,11 +11,14 @@ def index(request):
 	try:
 		user=User.objects.get(email=request.session['email'])
 		if user.usertype=="buyer":
-			return render(request,'index.html')
+			products=Product.objects.all()
+			return render(request,'index.html',{'products':products})
 		else:
 			return render(request,'seller-index.html')
+
 	except:
-		return render(request,'index.html')
+		products=Product.objects.all()
+		return render(request,'index.html',{'products':products})
 
 def seller_index(request):
 	return render(request,'seller-index.html')
@@ -63,7 +66,7 @@ def login(request):
 					request.session['email']=user.email
 					request.session['fname']=user.fname
 					request.session['profile_pic']=user.profile_pic.url
-					return render(request,'index.html')
+					return redirect('index')
 			else:
 				msg="Invalid password"
 				return render(request,'login.html',{'msg':msg})
@@ -252,3 +255,4 @@ def seller_delete_product(request,pk):
 	product=Product.objects.get(pk=pk)
 	product.delete()
 	return redirect('seller-view-product')
+
