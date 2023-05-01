@@ -247,3 +247,8 @@ def seller_edit_product(request,pk):
 		return redirect('seller-view-product')
 	else:
 		return render(request,'seller-edit-detail.html',{'product':product})
+
+def seller_delete_product(request,pk):
+	product=Product.objects.get(pk=pk)
+	product.delete()
+	return redirect('seller-view-product')
