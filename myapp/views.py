@@ -81,7 +81,7 @@ def logout(request):
 		del request.session['email']
 		del request.session['fname']
 		del request.session['profile_pic']
-		return render(request,'index.html')
+		return redirect('index')
 	except:
 		return render(request,'login.html')
 
@@ -256,3 +256,6 @@ def seller_delete_product(request,pk):
 	product.delete()
 	return redirect('seller-view-product')
 
+def product_detail(request,pk):
+	product=Product.objects.get(pk=pk)
+	return render(request,'product-detail.html',{'product':product})
