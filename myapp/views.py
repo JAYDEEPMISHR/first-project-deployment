@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import User,Product
+from .models import User,Product,Wishlist
 from django.conf import settings
 from django.core.mail import send_mail
 import random
@@ -259,3 +259,9 @@ def seller_delete_product(request,pk):
 def product_detail(request,pk):
 	product=Product.objects.get(pk=pk)
 	return render(request,'product-detail.html',{'product':product})
+
+def add_to_wishlist(request,pk):
+	product=Product.objects.get(pk=pk)
+	user=User.objects.get(email=request.session['email'])
+	Wishlist.objects.create(product=product,user=user)
+	return redirect('index')
