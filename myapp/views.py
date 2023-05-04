@@ -66,6 +66,8 @@ def login(request):
 					request.session['email']=user.email
 					request.session['fname']=user.fname
 					request.session['profile_pic']=user.profile_pic.url
+					wishlists=Wishlist.objects.get(user=user)
+					request.session['wishlist_count']=len(wishlists)
 					return redirect('index')
 			else:
 				msg="Invalid password"
@@ -81,6 +83,7 @@ def logout(request):
 		del request.session['email']
 		del request.session['fname']
 		del request.session['profile_pic']
+		del request.session['wishlist_count']
 		return redirect('index')
 	except:
 		return render(request,'login.html')
@@ -257,11 +260,32 @@ def seller_delete_product(request,pk):
 	return redirect('seller-view-product')
 
 def product_detail(request,pk):
+	wishlist_flag=False
+	user=User.objects.get(email=request.session['email'])
 	product=Product.objects.get(pk=pk)
-	return render(request,'product-detail.html',{'product':product})
+	try:
+		Wishlist.objects.get(user=user,product=product)
+		wishlist_flag=True
+	except:
+		pass
+
+	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag})
 
 def add_to_wishlist(request,pk):
 	product=Product.objects.get(pk=pk)
 	user=User.objects.get(email=request.session['email'])
 	Wishlist.objects.create(product=product,user=user)
-	return redirect('index')
+	return redirect('wishlist')
+
+def wishlist(request):
+	user=User.objects.get(email=request.session['email'])
+	wishlists=Wishlist.objects.filter(user=user)
+	request.session['wishlist_count']=len(wishlists)
+	return render(request,'wishlist.html',{'wishlists':wishlists})
+
+def remove_from_wishlist(request,pk):
+	product=Product.objects.get(pk=pk)
+	user=User.objects.get(email=request.session['email'])
+	wishlist=Wishlist.objects.get(user=user,product=product)
+	wishlist.delete()
+	return redirect('wishlist')

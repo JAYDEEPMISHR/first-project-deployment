@@ -1,0 +1,103 @@
+{% extends 'header.html' %}
+{% load static %}
+{%block content %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    </head>
+	<body>
+		
+		
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+
+					<!-- section title -->
+					<div class="col-md-12">
+						<div class="section-title">
+							{% if wishlists %}
+								<h3 class="title">Your Wishlist</h3>
+							{% else %}
+								<h3 class="title">No Item In Your Wishlist</h3>
+							{% endif %}
+						
+						</div>
+					</div>
+					<!-- /section title -->
+
+
+					<!-- Products tab & slick -->
+					<div class="col-md-12">
+						<div class="row">
+							<div class="products-tabs">
+								<!-- tab -->
+								<div id="tab1" class="tab-pane active">
+									<div class="products-slick" data-nav="#slick-nav-1">
+
+										{% for i in wishlists %}
+
+										<!-- product -->
+										<div class="product">
+											<div class="product-img">
+												<img src="{{i.product.product_image.url}}" width="200px" height="300px">
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{i.product.product_category}}</p>
+												<h3 class="product-name"><a href="#">{{i.product.product_name}}</a></h3>
+												<h4 class="product-price">{{i.product.product_price}} <i class="fas fa-rupee-sign"></i></h4>
+												<div class="product-rating">
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+													<i class="fa fa-star"></i>
+												</div>
+
+												{% if request.session.email %}
+
+												<div class="product-btns">
+													
+													
+													<a href="{% url 'product-detail' pk=i.product.pk %}"><span class="tooltipp"><i class="fa fa-eye"></i></span></button></a>
+												</div>
+												{% else %}
+													<a href="{% url 'login' %}"><input type="button" value="LOGIN" class="btn btn-primary"></a>											
+												{% endif %}
+
+											</div>
+
+											{% if request.session.email %}
+											<div class="add-to-cart">
+												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</div>
+
+											{% endif %}	
+												
+										</div>
+										<!-- /product -->
+										{% endfor %}
+											
+									
+									</div>
+									<div id="slick-nav-1" class="products-slick-nav"></div>
+								</div>
+								<!-- /tab -->
+							</div>
+						</div>
+					</div>
+					<!-- Products tab & slick -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		
+	</body>
+</html>
+{% endblock %}
