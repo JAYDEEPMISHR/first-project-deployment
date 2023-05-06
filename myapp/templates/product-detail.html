@@ -47,11 +47,17 @@
 
 												<a href="{% url 'seller-edit-product' pk=product.pk %}"><input type="button" value="Add to Cart" class="btn btn-primary"></a>
 
+												{% if cart_flag == True %}
+													<a href="{% url 'remove-from-cart' pk=product.pk %}"><input type="button" value="Remove from Cart" class="btn btn-danger"></a>
+												{% else %}
+													<a href="{% url 'add-to-cart' pk=product.pk %}"><input type="button" value="Add to Cart" class="btn btn-primary"></a>
+												{% endif %}
 												{% if wishlist_flag == True %}
 													<a href="{% url 'remove-from-wishlist' pk=product.pk %}"><input type="button" value="Remove from Wishlist" class="btn btn-danger"></a>
 												{% else %}
 													<a href="{% url 'add-to-wishlist' pk=product.pk %}"><input type="button" value="Add to Wishlist" class="btn btn-primary"></a>
 												{% endif %}
+												
 												
 											</div>
 										</div>

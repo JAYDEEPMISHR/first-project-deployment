@@ -68,6 +68,8 @@ def login(request):
 					request.session['profile_pic']=user.profile_pic.url
 					wishlists=Wishlist.objects.get(user=user)
 					request.session['wishlist_count']=len(wishlists)
+					carts=Cart.objects.get(user=user)
+					request.session['cart_count']=len(carts)
 					return redirect('index')
 			else:
 				msg="Invalid password"
@@ -84,6 +86,7 @@ def logout(request):
 		del request.session['fname']
 		del request.session['profile_pic']
 		del request.session['wishlist_count']
+		del request.session['cart_count']
 		return redirect('index')
 	except:
 		return render(request,'login.html')
@@ -261,6 +264,7 @@ def seller_delete_product(request,pk):
 
 def product_detail(request,pk):
 	wishlist_flag=False
+	cart_flag=False
 	user=User.objects.get(email=request.session['email'])
 	product=Product.objects.get(pk=pk)
 	try:
@@ -269,7 +273,13 @@ def product_detail(request,pk):
 	except:
 		pass
 
-	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag})
+	try:
+		Cart.objects.get(user=user,product=product)
+		cart_flag=True
+	except:
+		pass
+
+	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag,'cart_flag':cart_flag})
 
 def add_to_wishlist(request,pk):
 	product=Product.objects.get(pk=pk)
@@ -289,3 +299,29 @@ def remove_from_wishlist(request,pk):
 	wishlist=Wishlist.objects.get(user=user,product=product)
 	wishlist.delete()
 	return redirect('wishlist')
+
+def add_to_cart(request,pk):
+	product=Product.objects.get(pk=pk)
+	user=User.objects.get(email=request.session['email'])
+	Cart.objects.create(
+		product=product,
+		user=user,
+		product_price=product.product_price,
+		product_qty=1,
+		total_price=product.product_price,
+		payment_status=False
+		)
+	return redirect('cart')
+
+def cart(request):
+	user=User.objects.get(email=request.session['email'])
+	carts=Cart.objects.filter(user=user)
+	request.session['cart_count']=len(carts)
+	return render(request,'cart.html',{'carts':carts})
+
+def remove_from_cart(request,pk):
+	product=Product.objects.get(pk=pk)
+	user=User.objects.get(email=request.session['email'])
+	cart=Cart.objects.get(user=user,product=product)
+	cart.delete()
+	return redirect('cart')
