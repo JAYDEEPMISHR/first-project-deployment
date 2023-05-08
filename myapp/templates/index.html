@@ -125,11 +125,19 @@
 											</div>
 
 											{% if request.session.email %}
-											<a href="{% url 'add-to-cart' pk=i.pk %}">
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-											</div>
-											</a>
+												{% if i.cart_status == False %}
+													<a href="{% url 'add-to-cart' pk=i.pk %}">
+													<div class="add-to-cart">
+														<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+													</div>
+													</a>
+												{% else %}
+													<a href="{% url 'remove-from-cart' pk=i.pk %}">
+													<div class="add-to-cart">
+														<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> remove-from-cart</button>
+													</div>
+													</a>
+												{% endif %}
 
 											{% endif %}	
 												

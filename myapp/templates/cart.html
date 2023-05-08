@@ -47,15 +47,17 @@
 											</div>
 											<div class="product-body">
 												<p class="product-category">{{i.product.product_category}}</p>
-												<h3 class="product-name"><a href="#">{{i.product.product_name}}</a></h3>
-												<h4 class="product-price">{{i.product.product_price}} <i class="fas fa-rupee-sign"></i></h4>
-												<div class="product-rating">
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-												</div>
+												
+												<h3 class="product-name">Name: {{i.product.product_name}}</a></h3>
+												
+												<h4 class="product-price">Price: {{i.product.product_price}} <i class="fas fa-rupee-sign"></i></h4>
+												
+												<h4 class="product-price">Quantity: {{i.product_qty}} </h4>
+
+												<h4 class="product-price">Total Price: {{i.total_price}}<i class="fas fa-rupee-sign"></i> </h4>
+
+												
+
 
 												{% if request.session.email %}
 

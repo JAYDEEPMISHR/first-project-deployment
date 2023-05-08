@@ -31,6 +31,7 @@ class Product(models.Model):
 	product_desc=models.TextField()
 	product_image=models.ImageField(upload_to="product_image/")
 	product_stock=models.PositiveIntegerField()
+	cart_status=models.BooleanField(default=False) 
 
 	def __str__(self):
 		return self.seller.fname+"--"+self.product_name
