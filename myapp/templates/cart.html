@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		
     </head>
 	<body>
 		
@@ -52,7 +53,10 @@
 												
 												<h4 class="product-price">Price: {{i.product.product_price}} <i class="fas fa-rupee-sign"></i></h4>
 												
-												<h4 class="product-price">Quantity: {{i.product_qty}} </h4>
+												<form name="change_qty" method="post" action="">
+													{% csrf_token %}
+													<h4 class="product-price">Quantity:</h4><input type="number" name="product_qty" value="{{i.product_qty}}" min="1" max="10">
+												</form>
 
 												<h4 class="product-price">Total Price: {{i.total_price}}<i class="fas fa-rupee-sign"></i> </h4>
 
@@ -74,11 +78,19 @@
 
 											{% if request.session.email %}
 											
-											<a href="{ url 'remove-from-cart' pk=i.pk }">
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Remove From cart</button>
-											</div>
-											</a>
+												{% if i.cart_status == False %}
+													<a href="{% url 'add-to-cart' pk=i.pk %}">
+													<div class="add-to-cart">
+														<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+													</div>
+													</a>
+												{% else %}
+													<a href="{% url 'remove-from-cart' pk=i.pk %}">
+													<div class="add-to-cart">
+														<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> remove-from-cart</button>
+													</div>
+													</a>
+												{% endif %}
 
 											{% endif %}	
 												
@@ -102,7 +114,6 @@
 		</div>
 		<!-- /SECTION -->
 
-		
 	</body>
 </html>
 {% endblock %}
