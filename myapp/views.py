@@ -285,7 +285,7 @@ def mobile_collection(request):
 	try:
 		user=User.objects.get(email=request.session['email'])
 		products=Product.objects.filter(product_category=mobile)
-		return redirect('index')
+		return render(request,'mobile_collection.html',{'products':products})
 	except:
 		pass
 
