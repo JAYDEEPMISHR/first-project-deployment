@@ -281,6 +281,14 @@ def product_detail(request,pk):
 
 	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag,'cart_flag':cart_flag})
 
+def mobile_collection(request):
+	try:
+		user=User.objects.get(email=request.session['email'])
+		products=Product.objects.filter(product_category=mobile)
+		return redirect('index')
+	except:
+		pass
+
 def add_to_wishlist(request,pk):
 	product=Product.objects.get(pk=pk)
 	user=User.objects.get(email=request.session['email'])
