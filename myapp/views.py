@@ -316,10 +316,13 @@ def add_to_cart(request,pk):
 	return redirect('cart')
 
 def cart(request):
+	net_price=0
 	user=User.objects.get(email=request.session['email'])
 	carts=Cart.objects.filter(user=user)
 	request.session['cart_count']=len(carts)
-	return render(request,'cart.html',{'carts':carts})
+	for i in carts:
+		net_price=net_price+i.total_price
+	return render(request,'cart.html',{'carts':carts,'net_price':net_price})
 
 def remove_from_cart(request,pk):
 	product=Product.objects.get(pk=pk)
@@ -328,4 +331,13 @@ def remove_from_cart(request,pk):
 	cart.delete()
 	product.cart_status=False
 	product.save()
+	return redirect('cart')
+
+def change_qty(request):
+	cid=int(request.POST['cid'])
+	product_qty=int(request.POST['product_qty'])
+	cart=Cart.objects.get(pk=cid)
+	cart.product_qty=product_qty
+	cart.total_price=cart.product_price*product_qty
+	cart.save()
 	return redirect('cart')
