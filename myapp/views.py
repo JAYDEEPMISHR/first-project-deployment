@@ -12,7 +12,8 @@ def index(request):
 		user=User.objects.get(email=request.session['email'])
 		if user.usertype=="buyer":
 			products=Product.objects.all()
-			return render(request,'index.html',{'products':products})
+			carts=Cart.objects.get(user=user)
+			return render(request,'index.html',{'products':products,'carts':carts})
 		else:
 			return render(request,'seller-index.html')
 
@@ -104,9 +105,11 @@ def change_password(request):
 				return render(request,'change-password.html',{'msg':msg})
 		else:
 			msg="Old Password does not matched"
-			return render(request,'change-password.html',{'msg':msg})
+			carts=Cart.objects.get(user=user)
+			return render(request,'change-password.html',{'msg':msg,'carts':carts})
 	else:
-		return render(request,'change-password.html')
+		carts=Cart.objects.get(user=user)
+		return render(request,'change-password.html',{'carts':carts})
 
 def seller_change_password(request):
 	if request.method=="POST":
@@ -144,9 +147,11 @@ def profile(request):
 		user.save()
 		msg="Profile Updated successfully"
 		request.session['profile_pic']=user.profile_pic.url
-		return render(request,'profile.html',{'user':user,'msg':msg})
+		carts=Cart.objects.get(user=user)
+		return render(request,'profile.html',{'user':user,'msg':msg,'carts':carts})
 	else:
-		return render(request,'profile.html',{'user':user})
+		carts=Cart.objects.get(user=user)
+		return render(request,'profile.html',{'user':user,'carts':carts})
 
 def seller_profile(request):
 	user=User.objects.get(email=request.session['email'])
@@ -263,6 +268,7 @@ def seller_delete_product(request,pk):
 	return redirect('seller-view-product')
 
 def product_detail(request,pk):
+	carts=Cart.objects.get(user=user)
 	wishlist_flag=False
 	cart_flag=False
 	user=User.objects.get(email=request.session['email'])
@@ -279,15 +285,9 @@ def product_detail(request,pk):
 	except:
 		pass
 
-	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag,'cart_flag':cart_flag})
+	return render(request,'product-detail.html',{'product':product,'carts':carts,'wishlist_flag':wishlist_flag,'cart_flag':cart_flag})
 
-def mobile_collection(request):
-	try:
-		user=User.objects.get(email=request.session['email'])
-		products=Product.objects.filter(product_category=mobile)
-		return render(request,'mobile_collection.html',{'products':products})
-	except:
-		pass
+
 
 def add_to_wishlist(request,pk):
 	product=Product.objects.get(pk=pk)
@@ -297,9 +297,11 @@ def add_to_wishlist(request,pk):
 
 def wishlist(request):
 	user=User.objects.get(email=request.session['email'])
+	carts=Cart.objects.get(user=user)
 	wishlists=Wishlist.objects.filter(user=user)
 	request.session['wishlist_count']=len(wishlists)
-	return render(request,'wishlist.html',{'wishlists':wishlists})
+	
+	return render(request,'wishlist.html',{'wishlists':wishlists,'carts':carts})
 
 def remove_from_wishlist(request,pk):
 	product=Product.objects.get(pk=pk)

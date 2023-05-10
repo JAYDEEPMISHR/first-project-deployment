@@ -15,7 +15,7 @@ class User(models.Model):
 	usertype=models.CharField(max_length=100, default="buyer")
 
 	def __str__(self):
-		return self.fname+' '+self.lname
+		return self.fname+' '+self.lname+'--'+self.usertype
 
 class Product(models.Model):
 	category=(
