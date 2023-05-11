@@ -64,19 +64,10 @@
 													
 													<a href="{% url 'product-detail' pk=i.product.pk %}"><span class="tooltipp"><i class="fa fa-eye"></i></span></button></a>
 												</div>
-												{% else %}
-													<a href="{% url 'login' %}"><input type="button" value="LOGIN" class="btn btn-primary"></a>											
+																						
 												{% endif %}
 
-											</div>
-
-											{% if request.session.email %}
-											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-											</div>
-
-											{% endif %}	
-												
+											</div>			
 										</div>
 										<!-- /product -->
 										{% endfor %}
