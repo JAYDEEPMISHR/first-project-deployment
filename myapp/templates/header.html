@@ -66,7 +66,7 @@
 					<!-- row -->
 					<div class="row">
 						<!-- LOGO -->
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<div class="header-logo">
 								<a href="/" class="logo">
 									<img src="{% static './img/logo.png' %}" alt="">
@@ -76,7 +76,7 @@
 						<!-- /LOGO -->
 
 						<!-- SEARCH BAR -->
-						<div class="col-md-6">
+						<div class="col-md-5">
 							<div class="header-search">
 								<form>
 									<select class="input-select">
@@ -92,8 +92,14 @@
 						<!-- /SEARCH BAR -->
 
 						<!-- ACCOUNT -->
-						<div class="col-md-3 clearfix">
+						<div class="col-md-5 clearfix">
 							<div class="header-ctn">
+								<div>
+									<a href="{% url 'myorder' %}">
+										<i class="fa fa-shopping-bag"></i>
+										<span>My Order</span>
+									</a>
+								</div>
 								<!-- Wishlist -->
 								<div>
 									<a href="{% url 'wishlist' %}">

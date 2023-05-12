@@ -32,6 +32,8 @@ def index(request):
 		return render(request,'index.html',{'products':products})
 
 def seller_index(request):
+	seller=User.objects.get(email=request.session['email'])
+	products=Product.objects.filter(seller=seller)
 	return render(request,'seller-index.html')
 
 def signup(request):
@@ -291,7 +293,7 @@ def product_detail(request,pk):
 		pass
 
 	try:
-		carts=Cart.objects.get(user=user,product=product)
+		carts=Cart.objects.get(user=user,product=product,payment_status=False)
 		cart_flag=True
 	except:
 		pass
@@ -364,8 +366,32 @@ def change_qty(request):
 	return redirect('cart')
 
 def mobile(request):
-	products=Product.objects.filter(product_category="MOBILE")
+	
+	products=Product.objects.filter(product_category="Mobile")
 	return render(request,'index.html',{'products':products})
+
+def accesories(request):
+	products=Product.objects.filter(product_category="Accessories")
+	return render(request,'index.html',{'products':products})
+
+def camera(request):
+	products=Product.objects.filter(product_category="Camera")
+	return render(request,'index.html',{'products':products})
+
+def seller_mobile(request):
+	seller=User.objects.get(email=request.session['email'])
+	products=Product.objects.filter(seller=seller,product_category="Mobile")
+	return render(request,"seller-index.html",{'products':products,'seller':seller})
+
+def seller_accessories(request):
+	seller=User.objects.get(email=request.session['email'])
+	products=Product.objects.filter(seller=seller,product_category="Accessories")
+	return render(request,"seller-index.html",{'products':products,'seller':seller})
+
+def seller_cameras(request):
+	seller=User.objects.get(email=request.session['email'])
+	products=Product.objects.filter(seller=seller,product_category="Camera")
+	return render(request,"seller-index.html",{'products':products,'seller':seller})
 
 def checkout(request):
 	user=User.objects.get(email=request.session['email'])
@@ -413,3 +439,8 @@ def success(request):
 
 def cancel(request):
 	return render(request,'cancel.html')
+
+def myorder(request):
+	user=User.objects.get(email=request.session['email'])
+	carts=Cart.objects.filter(user=user, payment_status=True)
+	return render(request,'myorder.html',{'carts':carts})

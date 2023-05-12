@@ -28,9 +28,14 @@ urlpatterns = [
     path('remove-from-cart/<int:pk>/',views.remove_from_cart,name='remove-from-cart'),
     path('change-qty/',views.change_qty,name='change-qty'),
     path('mobile/',views.mobile,name='mobile'),
+    path('accesories/',views.accesories,name='accesories'),
+    path('camera/',views.camera,name='camera'),
+    path('seller-mobile/',views.seller_mobile,name='seller-mobile'),
+    path('seller-accessories/',views.seller_accessories,name='seller-accessories'),
+    path('seller-cameras/',views.seller_cameras,name='seller-cameras'),
     path('checkout/',views.checkout,name='checkout'),
     path('create-checkout-session/',views.create_checkout_session,name='payment'),
     path('success.html/',views.success,name='success'),
     path('cancel.html/',views.cancel,name='cancel'),
-    
+    path('myorder/',views.myorder,name='myorder'),
 ]
