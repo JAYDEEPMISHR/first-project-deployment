@@ -1,13 +1,13 @@
 {% extends 'header.html' %}
 {% load static %}
-{%block content %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-    </head>
+<title>PRODUCT DETAILS</title>
 	<body>
+
 		
-		
+
 		<!-- SECTION -->
 		<div class="section">
 			<!-- container -->
@@ -18,13 +18,21 @@
 					<!-- section title -->
 					<div class="col-md-12">
 						<div class="section-title">
-								<h3 class="title">Your Wishlist</h3>
-						
-						
+							<h3 class="title">Product Details</h3>
+							<div class="section-nav">
+								<ul class="section-tab-nav tab-nav">
+									<li class="active"><a data-toggle="tab" href="#tab1">Laptops</a></li>
+									<li><a data-toggle="tab" href="#tab1">Smartphones</a></li>
+									<li><a data-toggle="tab" href="#tab1">Cameras</a></li>
+									<li><a data-toggle="tab" href="#tab1">Accessories</a></li>
+								</ul>
+							</div>
 						</div>
 					</div>
 					<!-- /section title -->
-
+					{% if msg %}
+						<b style="color:blue;">{{msg}}</b>
+					{% endif %}
 					<!-- Products tab & slick -->
 					<div class="col-md-12">
 						<div class="row">
@@ -33,35 +41,39 @@
 								<div id="tab1" class="tab-pane active">
 									<div class="products-slick" data-nav="#slick-nav-1">
 										<!-- product -->
-							
-
+										
 										<div class="product">
 											<div class="product-img">
-												<img src="{{product.product_image.url}}" alt="" style="width: 200px;height: 200px; ">
+												<img src="{{ product.product_image.url }}" alt="" height=200px;>
+												
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{product.product_category}}</p>
-												<h3 class="product-name"><a href="#">Name: {{product.product_name}}</a></h3>
-												<h4 class="product-price">Price: {{product.product_price}}</h4>
-												<h4 class="product-price">Discription: {{product.product_desc}}</h4>
-
+												<p class="product-category">{{ product.product_cat }}</p>
+												<h3 class="product-name"><a href="#">{{ product.product_name }}</a></h3>
+												<h4 class="product-price">₹ {{ product.product_price }}</h4>
+												<h3 class="product-name"><a href="#">{{ product.product_desc }}</a></h3>
+												
+												{% if wishlist_flag == True %}
+													<a href="{% url 'remove-from-wishlist' pk=product.pk %}"><input type="button" class="btn btn-danger" value="REMOVE FROM WISHLIST"></a><br><br>
+												{% else %}
+													<a href="{% url 'add-to-wishlist' pk=product.pk %}"><input type="button" class="btn btn-primary" value="ADD TO WISHLIST"></a><br><br>
+												{% endif %}
+												
+												{% if cart_flag == True %}
+													<a href="{% url 'remove-from-cart' pk=product.pk %}"><input type="button" class="btn btn-danger" value="REMOVE FROM cart"></a><br><br>
+												{% else %}
+													<a href="{% url 'add-to-cart' pk=product.pk %}"><input type="button" class="btn btn-primary" value="ADD TO cart"></a><br><br>
+												{% endif %}
 												
 
-												{% if cart_flag == True %}
-													<a href="{% url 'remove-from-cart' pk=product.pk %}"><input type="button" value="Remove from Cart" class="btn btn-danger"></a>
-												{% else %}
-													<a href="{% url 'add-to-cart' pk=product.pk %}"><input type="button" value="Add to Cart" class="btn btn-primary"></a>
-												{% endif %}
-
-												{% if wishlist_flag == True %}
-													<a href="{% url 'remove-from-wishlist' pk=product.pk %}"><input type="button" value="Remove from Wishlist" class="btn btn-danger"></a>
-												{% else %}
-													<a href="{% url 'add-to-wishlist' pk=product.pk %}"><input type="button" value="Add to Wishlist" class="btn btn-primary"></a>
-												{% endif %}
 											</div>
+											
 										</div>
+										
 										<!-- /product -->
-								
+
+										
+										
 									</div>
 									<div id="slick-nav-1" class="products-slick-nav"></div>
 								</div>
@@ -77,9 +89,9 @@
 		</div>
 		<!-- /SECTION -->
 
-
 		
 
+		
 	</body>
 </html>
 {% endblock %}

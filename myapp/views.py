@@ -20,13 +20,12 @@ YOUR_DOMAIN = 'http://localhost:8000'
 def index(request):
 	try:
 		user=User.objects.get(email=request.session['email'])
-		if user.usertype=="buyer":
-			products=Product.objects.all()
-			carts=Cart.objects.get(user=user)
-			return render(request,'index.html',{'products':products,'carts':carts})
+		if user.usertype=="seller":
+			return redirect('seller-index')
 		else:
-			return render(request,'seller-index.html')
-
+			products=Product.objects.all()
+			carts=Cart.objects.filter(user=user)
+			return render(request,'index.html',{'products':products,'carts':carts})
 	except:
 		products=Product.objects.all()
 		return render(request,'index.html',{'products':products})
@@ -70,28 +69,31 @@ def login(request):
 		try:
 			user=User.objects.get(email=request.POST['email'])
 			if user.password==request.POST['password']:
-				if user.usertype=="buyer":
+				if user.usertype=="seller":
 					request.session['email']=user.email
 					request.session['fname']=user.fname
 					request.session['profile_pic']=user.profile_pic.url
-					wishlists=Wishlist.objects.get(user=user)
-					request.session['wishlist_count']=len(wishlists)
-					carts=Cart.objects.get(user=user)
-					request.session['cart_count']=len(carts)
-					return redirect('index')
+					request.session['usertype']=user.usertype
+					return redirect("seller-index")	
 				else:
 					request.session['email']=user.email
 					request.session['fname']=user.fname
 					request.session['profile_pic']=user.profile_pic.url
-					return render(request,'seller-index.html')
+					request.session['usertype']=user.usertype
+					wishlists=Wishlist.objects.filter(user=user)
+					request.session['wishlist_count']=len(wishlists)
+					carts=Cart.objects.filter(user=user)
+					request.session['cart_count']=len(carts)
+					return redirect('index')
 			else:
-				msg="Invalid password"
+				msg="Incorrect Password"
 				return render(request,'login.html',{'msg':msg})
 		except:
-			msg="Email Not registered"
+			msg="Email not registered"
 			return render(request,'login.html',{'msg':msg})
 	else:
 		return render(request,'login.html')
+
 
 def logout(request):
 	try:
@@ -283,9 +285,7 @@ def product_detail(request,pk):
 	wishlist_flag=False
 	cart_flag=False
 	user=User.objects.get(email=request.session['email'])
-	#carts=Cart.objects.get(user=user)
 	product=Product.objects.get(pk=pk)
-	
 	try:
 		Wishlist.objects.get(user=user,product=product)
 		wishlist_flag=True
@@ -293,32 +293,32 @@ def product_detail(request,pk):
 		pass
 
 	try:
-		carts=Cart.objects.get(user=user,product=product,payment_status=False)
+		Cart.objects.get(user=user,product=product)
 		cart_flag=True
 	except:
 		pass
-
-	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag,'cart_flag':cart_flag})
-
-
+	carts=Cart.objects.filter(user=user)
+	return render(request,'product-detail.html',{'product':product,'wishlist_flag':wishlist_flag,'cart_flag':cart_flag,'carts':carts})
 
 def add_to_wishlist(request,pk):
 	product=Product.objects.get(pk=pk)
 	user=User.objects.get(email=request.session['email'])
-	Wishlist.objects.create(product=product,user=user)
+	Wishlist.objects.create(
+		product=product,
+		user=user
+		)
 	return redirect('wishlist')
 
 def wishlist(request):
 	user=User.objects.get(email=request.session['email'])
 	wishlists=Wishlist.objects.filter(user=user)
 	request.session['wishlist_count']=len(wishlists)
-	carts=Cart.objects.get(user=user)
-	
+	carts=Cart.objects.filter(user=user)
 	return render(request,'wishlist.html',{'wishlists':wishlists,'carts':carts})
 
 def remove_from_wishlist(request,pk):
-	product=Product.objects.get(pk=pk)
 	user=User.objects.get(email=request.session['email'])
+	product=Product.objects.get(pk=pk)
 	wishlist=Wishlist.objects.get(user=user,product=product)
 	wishlist.delete()
 	return redirect('wishlist')
@@ -340,28 +340,30 @@ def add_to_cart(request,pk):
 
 def cart(request):
 	net_price=0
+	total_qty=0
 	user=User.objects.get(email=request.session['email'])
 	carts=Cart.objects.filter(user=user)
 	request.session['cart_count']=len(carts)
 	for i in carts:
 		net_price=net_price+i.total_price
-	return render(request,'cart.html',{'carts':carts,'net_price':net_price})
+		total_qty=total_qty+i.product_qty
+	return render(request,'cart.html',{'carts':carts,'net_price':net_price,'total_qty':total_qty})
 
 def remove_from_cart(request,pk):
-	product=Product.objects.get(pk=pk)
 	user=User.objects.get(email=request.session['email'])
-	carts=Cart.objects.get(user=user,product=product)
-	carts.delete()
+	product=Product.objects.get(pk=pk)
+	cart=Cart.objects.get(user=user,product=product)
+	cart.delete()
 	product.cart_status=False
 	product.save()
 	return redirect('cart')
 
 def change_qty(request):
-	cid=int(request.POST['cid'])
+	cart_id=int(request.POST['cart_id'])
 	product_qty=int(request.POST['product_qty'])
-	cart=Cart.objects.get(pk=cid)
+	cart=Cart.objects.get(pk=cart_id)
 	cart.product_qty=product_qty
-	cart.total_price=cart.product_price*product_qty
+	cart.total_price=product_qty*cart.product_price
 	cart.save()
 	return redirect('cart')
 
@@ -444,3 +446,12 @@ def myorder(request):
 	user=User.objects.get(email=request.session['email'])
 	carts=Cart.objects.filter(user=user, payment_status=True)
 	return render(request,'myorder.html',{'carts':carts})
+
+def seller_order(request):
+	seller=User.objects.get(email=request.session['email'])
+	carts=Cart.objects.filter(payment_status=True)
+	orders=[]
+	for i in carts:
+		if i.product.seller==seller:
+			orders.append(i)
+	return render(request,'seller-order.html',{'orders':orders})

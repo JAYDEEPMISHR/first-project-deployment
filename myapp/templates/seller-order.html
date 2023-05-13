@@ -1,4 +1,4 @@
-{% extends 'header.html' %}
+{% extends 'seller-header.html' %}
 {% load static %}
 {% block content %}
 <!DOCTYPE html>
@@ -17,10 +17,10 @@
 					<!-- section title -->
 					<div class="col-md-12">
 						<div class="section-title">
-							{% if carts %}
-								<h3 class="title">My Cart</h3>
+							{% if orders%}
+								<h3 class="title">Orders</h3>
 							{% else %}
-								<h3 class="title">No Items in your Cart</h3>
+								<h3 class="title">No Items in your Order list</h3>
 							{% endif %}
 					</div>
 					<!-- /section title -->
@@ -33,7 +33,7 @@
 								<div id="tab1" class="tab-pane active">
 									<div class="products-slick" data-nav="#slick-nav-1">
 										<!-- product -->
-										{% for i in carts %}
+										{% for i in orders %}
 										<div class="product">
 											<div class="product-img">
 												<img src="{{ i.product.product_image.url }}" alt="" width="200px" height="200px">
@@ -51,17 +51,20 @@
 												
 												<form name="change-qty" method="post" action="{% url 'change-qty' %}">
 													{% csrf_token %}
-													<h4 class="product-price">Quantity : <input type="number" name="product_qty" value="{{i.product_qty}}" min="1" max="50" onchange="this.form.submit();"></h4>
+													<h4 class="product-price">Quantity : <input type="number" name="product_qty" value="{{i.product_qty}}" min="1" max="50" onchange="this.form.submit();" readonly></h4>
 													<input type="hidden" name="cart_id" value="{{i.pk}}">	
 													
 												</form>
 
-												<h4 class="product-price">Total Price : ₹ {{ i.total_price }}</h4><br>
+												<h4 class="product-price">Total Price : ₹ {{ i.total_price }}</h4>
 
-												<div class="product-btns">
-													<a href="{% url 'remove-from-cart' pk=i.product.pk %}"><input type="button" class="btn btn-danger" value="REMOVE FROM CART"></a>
-												</div>
-												
+												<h4 class="product-price">Purchase By :  {{ i.user.fname }}</h4>
+
+												{% if i.payment_status == True %}
+													<h4 class="product-price">Payment-status : Paid</h4><br>
+												{% else %}
+													<h4 class="product-price">Payment-status : Pending</h4><br>
+												{% endif %}
 											</div>
 										</div>
 										{% endfor %}
