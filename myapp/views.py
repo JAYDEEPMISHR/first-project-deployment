@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 import random
 import json
 from django.utils import timezone
+from django.http import JsonResponse
 
 stripe.api_key = settings.STRIPE_PRIVATE_KEY
 YOUR_DOMAIN = 'http://localhost:8000'
@@ -16,6 +17,13 @@ YOUR_DOMAIN = 'http://localhost:8000'
 
 
 # Create your views here.
+
+def validate_email(request):
+	email=request.GET.get('email')
+	data={
+		'is_taken':User.objects.filter(email__iexact=email).exists()
+	}
+	return JsonResponse(data)
 
 def index(request):
 	try:

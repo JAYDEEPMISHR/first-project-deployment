@@ -62,7 +62,8 @@
 									<input class="input" type="text" name="lname" placeholder="Last Name">
 								</div>
 								<div class="form-group">
-									<input class="input" type="email" name="email" placeholder="Email">
+									<input class="input" type="email" name="email" id= "email" placeholder="Email">
+									<span id="email_error"></span>
 								</div>
 								<div class="form-group">
 									<input class="input" type="mobile" name="mobile" placeholder="Mobile Number">
@@ -91,6 +92,29 @@
 							</form> 
 						</div>
 						<!-- /Billing Details -->
+
+		<script>
+			
+			$("#email").change(function(){
+			  var email=$(this).val();
+
+			  $.ajax({
+			  	url: '/ajax/validate_email/',
+			  	data: {
+			  		'email':email
+			  	},
+			  	dataType: 'json',
+			  	success: function (data){
+			  	  if(data.is_taken){
+			  	  	documents.getElementById("email_error").innerHTML="This Email Id is already registered"
+			  	  }else{
+			  	  	documents.getElementById("email_error").innerHTML="";
+			  	  }
+			  	}
+			  });
+			});
+
+		</script>
 	</body>
 </html>
 {% endblock %}
