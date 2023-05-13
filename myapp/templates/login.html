@@ -49,7 +49,9 @@
 								{% csrf_token %}
 								
 								<div class="form-group">
-									<input class="input" type="email" name="email" placeholder="Enter registered Email">
+									<input class="input" type="email" name="email" id="
+									email" placeholder="Enter registered Email">
+									<span id="email_error"></span>
 								</div>
 								<div class="form-group">
 									<input class="input" type="password" name="password" placeholder="Password">
@@ -63,6 +65,26 @@
 							</form> 
 						</div>
 						<!-- /Billing Details -->
+
+		<script>
+			$("#email").change(function(){
+			  var email=$(this).val();
+			  $.ajax({
+			  	url: '/ajax/validate_email/',
+			  	data: {
+			  		'email':email
+			  	},
+			  	dataType: 'json',
+			  	success: function (data) {
+			  	  if(!data.is_taken){
+			  	  	document.getElementById("email_error").innerHTML="This Email Id is not registered";
+			  	  }else{
+			  	  	document.getElementById("email_error").innerHTML="";
+			  	  }
+			  	}
+			  });
+			});
+		</script>
 	</body>
 </html>
 {% endblock %}

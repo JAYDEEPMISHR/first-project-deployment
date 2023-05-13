@@ -23,6 +23,7 @@ def validate_email(request):
 	data={
 		'is_taken':User.objects.filter(email__iexact=email).exists()
 	}
+
 	return JsonResponse(data)
 
 def index(request):
@@ -32,7 +33,7 @@ def index(request):
 			return redirect('seller-index')
 		else:
 			products=Product.objects.all()
-			carts=Cart.objects.filter(user=user)
+			carts=Cart.objects.filter(user=user,payment_status=False)
 			return render(request,'index.html',{'products':products,'carts':carts})
 	except:
 		products=Product.objects.all()
@@ -90,7 +91,7 @@ def login(request):
 					request.session['usertype']=user.usertype
 					wishlists=Wishlist.objects.filter(user=user)
 					request.session['wishlist_count']=len(wishlists)
-					carts=Cart.objects.filter(user=user)
+					carts=Cart.objects.filter(user=user,payment_status=False)
 					request.session['cart_count']=len(carts)
 					return redirect('index')
 			else:
@@ -127,7 +128,7 @@ def change_password(request):
 				return render(request,'change-password.html',{'msg':msg})
 		else:
 			msg="Old Password does not matched"
-			carts=Cart.objects.get(user=user)
+			carts=Cart.objects.filter(user=user,payment_status=False)
 			return render(request,'change-password.html',{'msg':msg,'carts':carts})
 	else:
 		carts=Cart.objects.get(user=user)
@@ -169,10 +170,10 @@ def profile(request):
 		user.save()
 		msg="Profile Updated successfully"
 		request.session['profile_pic']=user.profile_pic.url
-		carts=Cart.objects.get(user=user)
+		carts=Cart.objects.filter(user=user,payment_status=False)
 		return render(request,'profile.html',{'user':user,'msg':msg,'carts':carts})
 	else:
-		carts=Cart.objects.get(user=user)
+		carts=Cart.objects.filter(user=user,payment_status=False)
 		return render(request,'profile.html',{'user':user,'carts':carts})
 
 def seller_profile(request):
@@ -350,7 +351,7 @@ def cart(request):
 	net_price=0
 	total_qty=0
 	user=User.objects.get(email=request.session['email'])
-	carts=Cart.objects.filter(user=user)
+	carts=Cart.objects.filter(user=user,payment_status=False)
 	request.session['cart_count']=len(carts)
 	for i in carts:
 		net_price=net_price+i.total_price
@@ -405,7 +406,7 @@ def seller_cameras(request):
 
 def checkout(request):
 	user=User.objects.get(email=request.session['email'])
-	carts=Cart.objects.filter(user=user)
+	carts=Cart.objects.filter(user=user,payment_status=False)
 	net_price=0
 	for i in carts:
 		net_price=net_price+i.total_price
