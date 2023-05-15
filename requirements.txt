@@ -1,0 +1,14 @@
+asgiref==3.6.0
+certifi==2023.5.7
+charset-normalizer==3.1.0
+Django==4.2
+idna==3.4
+pexpect==4.8.0
+Pillow==9.5.0
+ptyprocess==0.7.0
+requests==2.30.0
+sqlparse==0.4.4
+Strip==0.0.1.dev14
+stripe==5.4.0
+tzdata==2023.3
+urllib3==2.0.2

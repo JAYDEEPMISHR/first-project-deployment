@@ -131,8 +131,10 @@ def change_password(request):
 			carts=Cart.objects.filter(user=user,payment_status=False)
 			return render(request,'change-password.html',{'msg':msg,'carts':carts})
 	else:
-		carts=Cart.objects.get(user=user)
-		return render(request,'change-password.html',{'carts':carts})
+		#user=User.objects.get(email=request.session['email'])
+		#carts=Cart.objects.get(user=user)
+		return render(request,'change-password.html')
+
 
 def seller_change_password(request):
 	if request.method=="POST":
@@ -322,7 +324,7 @@ def wishlist(request):
 	user=User.objects.get(email=request.session['email'])
 	wishlists=Wishlist.objects.filter(user=user)
 	request.session['wishlist_count']=len(wishlists)
-	carts=Cart.objects.filter(user=user)
+	carts=Cart.objects.filter(user=user,payment_status=False)
 	return render(request,'wishlist.html',{'wishlists':wishlists,'carts':carts})
 
 def remove_from_wishlist(request,pk):

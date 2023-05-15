@@ -51,12 +51,12 @@
 												
 												<form name="change-qty" method="post" action="{% url 'change-qty' %}">
 													{% csrf_token %}
-													<h4 class="product-price">Quantity : <input type="number" name="product_qty" value="{{i.product_qty}}" min="1" max="50" onchange="this.form.submit();"></h4>
+													<h4 class="product-price">Quantity : <input type="number" name="product_qty" value="{{i.product_qty}}" min="1" max="10" onchange="this.form.submit();"></h4>
 													<input type="hidden" name="cart_id" value="{{i.pk}}">	
 													
 												</form>
 
-												<h4 class="product-price">Total Price : ₹ {{ i.total_price }}</h4><br>
+												<h4 class="product-price" id="total_price">Total Price : ₹ {{ i.total_price }}</h4><br>
 
 												<div class="product-btns">
 													<a href="{% url 'remove-from-cart' pk=i.product.pk %}"><input type="button" class="btn btn-danger" value="REMOVE FROM CART"></a>
@@ -90,6 +90,7 @@
 		</div>
 		<!-- /SECTION -->			
 		<br>
+
 	</body>
 </html>
 {% endblock %}

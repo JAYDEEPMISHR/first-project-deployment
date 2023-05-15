@@ -133,13 +133,14 @@
 															<h4 class="product-price"><span class="qty">{{i.product_qty}}x</span>{{i.product.product_price}} Rs</h4>
 														</div>
 												</div>
+												<div class="cart-summary">
+													<small></small>
+													<h5>SUBTOTAL:{{i.total_price}} Rs</h5>
+												</div>
 											{% endfor %}
 										</div>
 
-										<div class="cart-summary">
-											<small></small>
-											<h5>SUBTOTAL:{{i.product.total_price}}</h5>
-										</div>
+										
 										<div class="cart-btns">
 											<a href="{% url 'cart' %}">View Cart</a>
 											<a href="{% url 'checkout' %}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
@@ -216,11 +217,9 @@
 							<div class="footer">
 								<h3 class="footer-title">Categories</h3>
 								<ul class="footer-links">
-									<li><a href="#">Hot deals</a></li>
-									<li><a href="#">Laptops</a></li>
-									<li><a href="#">Smartphones</a></li>
-									<li><a href="#">Cameras</a></li>
-									<li><a href="#">Accessories</a></li>
+									<li><a href="{% url 'mobile' %}">Smartphones</a></li>
+									<li><a href="{% url 'camera' %}">Cameras</a></li>
+									<li><a href="{% url 'accesories' %}">Accessories</a></li>
 								</ul>
 							</div>
 						</div>
@@ -244,10 +243,9 @@
 							<div class="footer">
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
-									<li><a href="#">My Account</a></li>
-									<li><a href="#">View Cart</a></li>
-									<li><a href="#">Wishlist</a></li>
-									<li><a href="#">Track My Order</a></li>
+									<li><a href="{% url 'profile' %}">My Account</a></li>
+									<li><a href="{% url 'cart' %}">View Cart</a></li>
+									<li><a href="{% url 'wishlist' %}">Wishlist</a></li>
 									<li><a href="#">Help</a></li>
 								</ul>
 							</div>
